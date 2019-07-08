@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="InsuranceClaimModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Claim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StaffId" Type="int" Nullable="false" />
+          <Property Name="DateDealt" Type="datetime" />
+          <Property Name="TotalCost" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="HasPaid" Type="int" />
+          <Property Name="Description" Type="nvarchar" MaxLength="512" />
+        </EntityType>
+        <EntityType Name="ClaimDamage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClaimId" Type="int" />
+          <Property Name="DamageId" Type="int" />
+        </EntityType>
+        <EntityType Name="Damage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VehicleId" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="DamagePart" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Severity" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Photo" Type="nvarchar" MaxLength="512" Nullable="false" />
+          <Property Name="Cost" Type="decimal" Precision="18" Scale="6" />
+        </EntityType>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Type" Type="int" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="MemberId" Type="int" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Make" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Model" Type="nvarchar" MaxLength="256" />
+          <Property Name="Year" Type="int" />
+        </EntityType>
+        <Association Name="FK__Claim__StaffId__412EB0B6">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="1" />
+          <End Role="Claim" Type="Self.Claim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Claim">
+              <PropertyRef Name="StaffId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClaimDama__Claim__440B1D61">
+          <End Role="Claim" Type="Self.Claim" Multiplicity="0..1" />
+          <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Claim">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClaimDamage">
+              <PropertyRef Name="ClaimId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClaimDama__Damag__44FF419A">
+          <End Role="Damage" Type="Self.Damage" Multiplicity="0..1" />
+          <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Damage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClaimDamage">
+              <PropertyRef Name="DamageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Damage__VehicleI__3E52440B">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Damage" Type="Self.Damage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Damage">
+              <PropertyRef Name="VehicleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vehicle__MemberI__3B75D760">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vehicle">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="InsuranceClaimModelStoreContainer">
+          <EntitySet Name="Claim" EntityType="Self.Claim" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClaimDamage" EntityType="Self.ClaimDamage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Damage" EntityType="Self.Damage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vehicle" EntityType="Self.Vehicle" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Claim__StaffId__412EB0B6" Association="Self.FK__Claim__StaffId__412EB0B6">
+            <End Role="Staff" EntitySet="Staff" />
+            <End Role="Claim" EntitySet="Claim" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClaimDama__Claim__440B1D61" Association="Self.FK__ClaimDama__Claim__440B1D61">
+            <End Role="Claim" EntitySet="Claim" />
+            <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClaimDama__Damag__44FF419A" Association="Self.FK__ClaimDama__Damag__44FF419A">
+            <End Role="Damage" EntitySet="Damage" />
+            <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Damage__VehicleI__3E52440B" Association="Self.FK__Damage__VehicleI__3E52440B">
+            <End Role="Vehicle" EntitySet="Vehicle" />
+            <End Role="Damage" EntitySet="Damage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vehicle__MemberI__3B75D760" Association="Self.FK__Vehicle__MemberI__3B75D760">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Vehicle" EntitySet="Vehicle" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InsuranceClaimModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Claim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StaffId" Type="Int32" Nullable="false" />
+          <Property Name="DateDealt" Type="DateTime" Precision="3" />
+          <Property Name="TotalCost" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="HasPaid" Type="Int32" />
+          <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Staff" Relationship="Self.FK__Claim__StaffId__412EB0B6" FromRole="Claim" ToRole="Staff" />
+          <NavigationProperty Name="ClaimDamage" Relationship="Self.FK__ClaimDama__Claim__440B1D61" FromRole="Claim" ToRole="ClaimDamage" />
+        </EntityType>
+        <EntityType Name="ClaimDamage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClaimId" Type="Int32" />
+          <Property Name="DamageId" Type="Int32" />
+          <NavigationProperty Name="Claim" Relationship="Self.FK__ClaimDama__Claim__440B1D61" FromRole="ClaimDamage" ToRole="Claim" />
+          <NavigationProperty Name="Damage" Relationship="Self.FK__ClaimDama__Damag__44FF419A" FromRole="ClaimDamage" ToRole="Damage" />
+        </EntityType>
+        <EntityType Name="Damage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VehicleId" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DamagePart" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Severity" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Photo" Type="String" MaxLength="512" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Cost" Type="Decimal" Precision="18" Scale="6" />
+          <NavigationProperty Name="ClaimDamage" Relationship="Self.FK__ClaimDama__Damag__44FF419A" FromRole="Damage" ToRole="ClaimDamage" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.FK__Damage__VehicleI__3E52440B" FromRole="Damage" ToRole="Vehicle" />
+        </EntityType>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="Int32" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.FK__Vehicle__MemberI__3B75D760" FromRole="Member" ToRole="Vehicle" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Claim" Relationship="Self.FK__Claim__StaffId__412EB0B6" FromRole="Staff" ToRole="Claim" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MemberId" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Make" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Year" Type="Int32" />
+          <NavigationProperty Name="Damage" Relationship="Self.FK__Damage__VehicleI__3E52440B" FromRole="Vehicle" ToRole="Damage" />
+          <NavigationProperty Name="Member" Relationship="Self.FK__Vehicle__MemberI__3B75D760" FromRole="Vehicle" ToRole="Member" />
+        </EntityType>
+        <Association Name="FK__Claim__StaffId__412EB0B6">
+          <End Role="Staff" Type="Self.Staff" Multiplicity="1" />
+          <End Role="Claim" Type="Self.Claim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Staff">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Claim">
+              <PropertyRef Name="StaffId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClaimDama__Claim__440B1D61">
+          <End Role="Claim" Type="Self.Claim" Multiplicity="0..1" />
+          <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Claim">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClaimDamage">
+              <PropertyRef Name="ClaimId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ClaimDama__Damag__44FF419A">
+          <End Role="Damage" Type="Self.Damage" Multiplicity="0..1" />
+          <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Damage">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ClaimDamage">
+              <PropertyRef Name="DamageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Damage__VehicleI__3E52440B">
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="Damage" Type="Self.Damage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicle">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Damage">
+              <PropertyRef Name="VehicleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vehicle__MemberI__3B75D760">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vehicle">
+              <PropertyRef Name="MemberId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="InsuranceClaimEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Claim" EntityType="Self.Claim" />
+          <EntitySet Name="ClaimDamage" EntityType="Self.ClaimDamage" />
+          <EntitySet Name="Damage" EntityType="Self.Damage" />
+          <EntitySet Name="Member" EntityType="Self.Member" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" />
+          <EntitySet Name="Vehicle" EntityType="Self.Vehicle" />
+          <AssociationSet Name="FK__Claim__StaffId__412EB0B6" Association="Self.FK__Claim__StaffId__412EB0B6">
+            <End Role="Staff" EntitySet="Staff" />
+            <End Role="Claim" EntitySet="Claim" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClaimDama__Claim__440B1D61" Association="Self.FK__ClaimDama__Claim__440B1D61">
+            <End Role="Claim" EntitySet="Claim" />
+            <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ClaimDama__Damag__44FF419A" Association="Self.FK__ClaimDama__Damag__44FF419A">
+            <End Role="Damage" EntitySet="Damage" />
+            <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Damage__VehicleI__3E52440B" Association="Self.FK__Damage__VehicleI__3E52440B">
+            <End Role="Vehicle" EntitySet="Vehicle" />
+            <End Role="Damage" EntitySet="Damage" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vehicle__MemberI__3B75D760" Association="Self.FK__Vehicle__MemberI__3B75D760">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Vehicle" EntitySet="Vehicle" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InsuranceClaimModelStoreContainer" CdmEntityContainer="InsuranceClaimEntities">
+          <EntitySetMapping Name="Claim">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.Claim">
+              <MappingFragment StoreEntitySet="Claim">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StaffId" ColumnName="StaffId" />
+                <ScalarProperty Name="DateDealt" ColumnName="DateDealt" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="HasPaid" ColumnName="HasPaid" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClaimDamage">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.ClaimDamage">
+              <MappingFragment StoreEntitySet="ClaimDamage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClaimId" ColumnName="ClaimId" />
+                <ScalarProperty Name="DamageId" ColumnName="DamageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Damage">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.Damage">
+              <MappingFragment StoreEntitySet="Damage">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+                <ScalarProperty Name="DamagePart" ColumnName="DamagePart" />
+                <ScalarProperty Name="Severity" ColumnName="Severity" />
+                <ScalarProperty Name="Photo" ColumnName="Photo" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Member">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.Member">
+              <MappingFragment StoreEntitySet="Member">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staff">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.Staff">
+              <MappingFragment StoreEntitySet="Staff">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vehicle">
+            <EntityTypeMapping TypeName="InsuranceClaimModel.Vehicle">
+              <MappingFragment StoreEntitySet="Vehicle">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MemberId" ColumnName="MemberId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Make" ColumnName="Make" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

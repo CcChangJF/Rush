@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InsuranceClaimModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Claim">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="StaffId" Type="Int32" Nullable="false" />
+    <Property Name="DateDealt" Type="DateTime" Precision="3" />
+    <Property Name="TotalCost" Type="Decimal" Precision="18" Scale="6" />
+    <Property Name="HasPaid" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Staff" Relationship="Self.FK__Claim__StaffId__412EB0B6" FromRole="Claim" ToRole="Staff" />
+    <NavigationProperty Name="ClaimDamage" Relationship="Self.FK__ClaimDama__Claim__440B1D61" FromRole="Claim" ToRole="ClaimDamage" />
+  </EntityType>
+  <EntityType Name="ClaimDamage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ClaimId" Type="Int32" />
+    <Property Name="DamageId" Type="Int32" />
+    <NavigationProperty Name="Claim" Relationship="Self.FK__ClaimDama__Claim__440B1D61" FromRole="ClaimDamage" ToRole="Claim" />
+    <NavigationProperty Name="Damage" Relationship="Self.FK__ClaimDama__Damag__44FF419A" FromRole="ClaimDamage" ToRole="Damage" />
+  </EntityType>
+  <EntityType Name="Damage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="VehicleId" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DamagePart" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Severity" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Photo" Type="String" MaxLength="512" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Cost" Type="Decimal" Precision="18" Scale="6" />
+    <NavigationProperty Name="ClaimDamage" Relationship="Self.FK__ClaimDama__Damag__44FF419A" FromRole="Damage" ToRole="ClaimDamage" />
+    <NavigationProperty Name="Vehicle" Relationship="Self.FK__Damage__VehicleI__3E52440B" FromRole="Damage" ToRole="Vehicle" />
+  </EntityType>
+  <EntityType Name="Member">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Type" Type="Int32" />
+    <NavigationProperty Name="Vehicle" Relationship="Self.FK__Vehicle__MemberI__3B75D760" FromRole="Member" ToRole="Vehicle" />
+  </EntityType>
+  <EntityType Name="Staff">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Claim" Relationship="Self.FK__Claim__StaffId__412EB0B6" FromRole="Staff" ToRole="Claim" />
+  </EntityType>
+  <EntityType Name="Vehicle">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="MemberId" Type="Int32" Nullable="false" />
+    <Property Name="Type" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Make" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Model" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+    <Property Name="Year" Type="Int32" />
+    <NavigationProperty Name="Damage" Relationship="Self.FK__Damage__VehicleI__3E52440B" FromRole="Vehicle" ToRole="Damage" />
+    <NavigationProperty Name="Member" Relationship="Self.FK__Vehicle__MemberI__3B75D760" FromRole="Vehicle" ToRole="Member" />
+  </EntityType>
+  <Association Name="FK__Claim__StaffId__412EB0B6">
+    <End Role="Staff" Type="Self.Staff" Multiplicity="1" />
+    <End Role="Claim" Type="Self.Claim" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Staff">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Claim">
+        <PropertyRef Name="StaffId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ClaimDama__Claim__440B1D61">
+    <End Role="Claim" Type="Self.Claim" Multiplicity="0..1" />
+    <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Claim">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ClaimDamage">
+        <PropertyRef Name="ClaimId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ClaimDama__Damag__44FF419A">
+    <End Role="Damage" Type="Self.Damage" Multiplicity="0..1" />
+    <End Role="ClaimDamage" Type="Self.ClaimDamage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Damage">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ClaimDamage">
+        <PropertyRef Name="DamageId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Damage__VehicleI__3E52440B">
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="1" />
+    <End Role="Damage" Type="Self.Damage" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Vehicle">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Damage">
+        <PropertyRef Name="VehicleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Vehicle__MemberI__3B75D760">
+    <End Role="Member" Type="Self.Member" Multiplicity="1" />
+    <End Role="Vehicle" Type="Self.Vehicle" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Member">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Vehicle">
+        <PropertyRef Name="MemberId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="InsuranceClaimEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Claim" EntityType="Self.Claim" />
+    <EntitySet Name="ClaimDamage" EntityType="Self.ClaimDamage" />
+    <EntitySet Name="Damage" EntityType="Self.Damage" />
+    <EntitySet Name="Member" EntityType="Self.Member" />
+    <EntitySet Name="Staff" EntityType="Self.Staff" />
+    <EntitySet Name="Vehicle" EntityType="Self.Vehicle" />
+    <AssociationSet Name="FK__Claim__StaffId__412EB0B6" Association="Self.FK__Claim__StaffId__412EB0B6">
+      <End Role="Staff" EntitySet="Staff" />
+      <End Role="Claim" EntitySet="Claim" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ClaimDama__Claim__440B1D61" Association="Self.FK__ClaimDama__Claim__440B1D61">
+      <End Role="Claim" EntitySet="Claim" />
+      <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ClaimDama__Damag__44FF419A" Association="Self.FK__ClaimDama__Damag__44FF419A">
+      <End Role="Damage" EntitySet="Damage" />
+      <End Role="ClaimDamage" EntitySet="ClaimDamage" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Damage__VehicleI__3E52440B" Association="Self.FK__Damage__VehicleI__3E52440B">
+      <End Role="Vehicle" EntitySet="Vehicle" />
+      <End Role="Damage" EntitySet="Damage" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Vehicle__MemberI__3B75D760" Association="Self.FK__Vehicle__MemberI__3B75D760">
+      <End Role="Member" EntitySet="Member" />
+      <End Role="Vehicle" EntitySet="Vehicle" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
